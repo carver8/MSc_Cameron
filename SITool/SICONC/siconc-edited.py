@@ -1,4 +1,4 @@
-q# Author: Xia Lin
+# Author: Xia Lin
 # Date:   Feb 2021
 # Contents:
 # 1) A function that interpolates the input ice concentration data into the NSIDC-0051 grid, 
@@ -15,38 +15,20 @@ q# Author: Xia Lin
 # 7) A script calls the functions 3) and 4) to plot the ice concentration metrics (Fig. 2)
 # 8) A script plots the February and September mean ice concentration differences in the Arctic and Antarctic (Figs. A1-A4);
 
-# %%------------------------------------
-# PART 1) The interpolation function  |
-# ------------------------------------
+# %% PART 1) The interpolation function
 
-import pyresample
+import numpy as np
+import xarray as xr
 
 def compute_interp(lat,lon,field):
-  # ''' Input: -latitude, longitude of the original grid
-  #            -ice variable on the original grid
-  #     Output: Interpolated the ice variable to the NSIDC-0051 polar stereographic grid
-  # '''
-  # if np.min(lat) > 0:
-    # Northern Hemisphere
-    # load lat-lon of the target grid
-    # access_pr_file = '/sea ice data/OBS/siconc/NSIDC-0051/siconc_r1i1p1_mon_197901-201712_nh-psn25.nc'
-    # dset = xr.open_dataset(access_pr_file)
-    # NHlat_curv = np.array(dset['latitude'][:,:])
-    # NHlon_curv = np.array(dset['longitude'][:,:])
-    # #Create a pyresample object holding the origin grid:
-    # orig_def = pyresample.geometry.SwathDefinition(lons=lon, lats=lat)
-    # #Create another pyresample object for the target (curvilinear) grid:
-    # targ_def = pyresample.geometry.SwathDefinition(lons=NHlon_curv, lats=NHlat_curv)
-    # #siconc_nearest interp
-    # # NHconcentration = np.zeros((336,304,448))
-    # # NHconcentration = np.array([pyresample.kd_tree.resample_nearest(orig_def, np.array(field[i, :, :]), targ_def, radius_of_influence = 500000, fill_value=None) for i in range(336)])
-    # idx = np.where(NHconcentration > 1000.00)
-    # # NHconcentration[idx] = np.nan
-    # return NHconcentration
+  ''' Input: -latitude, longitude of the original grid
+             -ice variable on the original grid
+      Output: Interpolated the ice variable to the NSIDC-0051 polar stereographic grid
+  '''
   if np.max(lat) < 0:
     # Southern Hemisphere
     # load lat-lon of the target grid
-    access_pr_file = 'siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc'
+    access_pr_file = '/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/SICONC-OBS-DATA/G02202-cdr-ancillary-sh.nc'
     dset = xr.open_dataset(access_pr_file)
     SHlat_curv = np.array(dset['latitude'][:,:])
     SHlon_curv = np.array(dset['longitude'][:,:])
@@ -61,24 +43,9 @@ def compute_interp(lat,lon,field):
     SHconcentration[idx] = np.nan
     return SHconcentration
   else:
-    # Northern Hemisphere
-    # load lat-lon of the target grid
-    # access_pr_file = '/sea ice data/OBS/siconc/NSIDC-0051/siconc_r1i1p1_mon_197901-201712_nh-psn25.nc'
-    # dset = xr.open_dataset(access_pr_file)
-    # NHlat_curv = np.array(dset['latitude'][:,:])
-    # NHlon_curv = np.array(dset['longitude'][:,:])
-    # #Create a pyresample object holding the origin grid:
-    # orig_def = pyresample.geometry.SwathDefinition(lons=lon, lats=lat)
-    # #Create another pyresample object for the target (curvilinear) grid:
-    # targ_def = pyresample.geometry.SwathDefinition(lons=NHlon_curv, lats=NHlat_curv)
-    # #siconc_nearest interp
-    # NHconcentration = np.zeros((336,304,448))
-    # NHconcentration = np.array([pyresample.kd_tree.resample_nearest(orig_def, np.array(field[i, :, :]), targ_def, radius_of_influence = 500000, fill_value=None) for i in range(336)])
-    # idx = np.where(NHconcentration > 1000.00)
-    # NHconcentration[idx] = np.nan
     # Southern Hemisphere
     # load lat-lon of the target grid
-    access_pr_file = 'siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc'
+    access_pr_file = '/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/SICONC-OBS-DATA/G02202-cdr-ancillary-sh.nc'
     dset = xr.open_dataset(access_pr_file)
     SHlat_curv = np.array(dset['latitude'][:,:])
     SHlon_curv = np.array(dset['longitude'][:,:])
@@ -94,9 +61,8 @@ def compute_interp(lat,lon,field):
 
     return SHconcentration
 
-# %%-----------------------------------------------
-# PART 2) The ice concentration errors function  |   
-# -----------------------------------------------
+# %% PART 2) The ice concentration errors function   
+
 def compute_siconc_metrics(concentration, concentration1, cellarea):
   ''' Input: - sea ice concentration (%) in the Arctic or Antarctic from two datasets
              - cellarea: array of grid cell areas in the Arctic or Antarctic (square meters)
@@ -202,9 +168,8 @@ def compute_siconc_metrics(concentration, concentration1, cellarea):
 
   return error_mean, error_std, error_trend
 
-# %%------------------------------
-# PART 3) The heatmap function  |
-# ------------------------------
+# %% PART 3) The heatmap function
+
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
   ''' Input: -data: A 2D numpy array of shape (N, M).
@@ -253,9 +218,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
 
   return im, cbar
 
-# %%---------------------------------------
-# PART 4) The annotate heatmap function  |
-# ---------------------------------------
+# %% PART 4) The annotate heatmap function
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
                      threshold=None, **textkw):
@@ -301,9 +264,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
             
     return texts
 
-# %% --------------------------------------------------
-# PART 5) A script deals with the input NetCDF data |
-# --------------------------------------------------   
+# %% PART 5) A script deals with the input NetCDF data  
 import os
 import sys
 import xarray as xr
@@ -318,48 +279,34 @@ import matplotlib.colors as colors
 import matplotlib.ticker as ticker
 import matplotlib.font_manager
 import matplotlib.pyplot as plt
-import matplotlib; matplotlib.use('Agg')
+import matplotlib; matplotlib.use('TkAgg')
+import matplotlib.path as mpath
 import matplotlib.gridspec as gridspec
 from mpl_toolkits.axes_grid1 import AxesGrid
 from mpl_toolkits.basemap import Basemap, addcyclic
+
+import cartopy.crs as ccrs
+import cartopy.feature as cfeature
 # Read data and interp into same grid
 # ----------------------------
-# Load NSIDC0051 NH &SH siconc
+# %%% Load NSIDC0051 SH siconc
 # ----------------------------
-# access_pr_file = '/sea ice data/OBS/siconc/NSIDC-0051/siconc_r1i1p1_mon_197901-201712_nh-psn25.nc'
-
-# dset = xr.open_dataset(access_pr_file)
-# NHlat_curv = np.array(dset['latitude'][:,:])
-# NHlon_curv =np.array(dset['longitude'][:,:])
-# NHconcentration = np.array(dset['siconc'][12:348,:,:])
-# NHcellarea = np.array(dset['areacello'][:,:])
-
-access_pr_file = 'siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc'
+access_pr_file = '/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/Data/seaice_conc_monthly_sh_n07_197811_v03r01.nc' #access sea ice dataset
 dset = xr.open_dataset(access_pr_file)
+data=Dataset(access_pr_file)
 SHlat_curv = np.array(dset['latitude'][:,:])
 SHlon_curv =np.array(dset['longitude'][:,:])
-SHconcentration = np.array(dset['siconc'][12:348,:,:])
-SHcellarea = np.array(dset['areacello'][:,:])
-# NHconcentration[91,:,:]=np.nanmean(NHconcentration[7::12,:,:], axis=0)
-# NHconcentration[143,:,:]=np.nanmean(NHconcentration[11::12,:,:], axis=0)
+SHconcentration = np.array(dset['seaice_conc_monthly_cdr'][:,:,:])
+# SHcellarea = np.array(dset['areacello'][:,:])
+dset.seaice_conc_monthly_cdr.plot()
+
 SHconcentration[91,:,:]=np.nanmean(SHconcentration[7::12,:,:], axis=0)
 SHconcentration[143,:,:]=np.nanmean(SHconcentration[11::12,:,:], axis=0)
-# np.savez('NSIDC0051_1980_2007_siconc.npz', NHlat_curv, NHlon_curv, NHconcentration, SHlat_curv, SHlon_curv, SHconcentration, NHcellarea, SHcellarea)                                               
-np.savez('NSIDC0051_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration, SHcellarea)                                               
-
-
-
-#%%------------------------------------------------------------------------------------------------------------------------------------
-# Load OSI450 NH & SH siconc and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km
+# np.savez('NSIDC0051_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration, SHcellarea)                                               
 #------------------------------------------------------------------------------------------------------------------------------------
-# Second dataset comparison (not needed)
-# Northern Hemisphere
-# access_pr_file = '/sea ice data/OBS/siconc/OSI-450/ice_conc_nh_ease2-250_cdr-v2p0_mon_198001-201512.nc'
-# dset = xr.open_dataset(access_pr_file)
-# lat = np.array(dset['lat'][:,:])
-# lon =np.array(dset['lon'][:,:])
-# field = np.array(dset['ice_conc'][0:336,:,:])
-# NHconcentration=compute_interp(lat,lon,field)
+# %%% Load OSI450 SH siconc and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km
+#------------------------------------------------------------------------------------------------------------------------------------
+
 # Southern Hemisphere
 access_pr_file = '/sea ice data/OBS/siconc/OSI-450/ice_conc_sh_ease2-250_cdr-v2p0_mon_198001-201512.nc'
 dset = xr.open_dataset(access_pr_file)
@@ -367,101 +314,130 @@ lat = np.array(dset['lat'][:,:])
 lon =np.array(dset['lon'][:,:])
 field = np.array(dset['ice_conc'][0:336,:,:])
 SHconcentration=compute_interp(lat,lon,field)
-# NHconcentration[75,:,:]=np.nanmean(NHconcentration[3::12,:,:], axis=0)
-# NHconcentration[76,:,:]=np.nanmean(NHconcentration[4::12,:,:], axis=0)
+
 SHconcentration[75,:,:]=np.nanmean(SHconcentration[3::12,:,:], axis=0)
 SHconcentration[76,:,:]=np.nanmean(SHconcentration[4::12,:,:], axis=0)
-# np.savez('OSI450_1980_2007_siconc.npz', NHlat_curv, NHlon_curv, NHconcentration, SHlat_curv, SHlon_curv, SHconcentration)    
-np.savez('OSI450_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)    
+np.savez('OSI450_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)  
+
+                                             
+# ---------------------------------------------------------------------------
+# dset_sliced = dset.sel(time=slice('1979-01-01', '2017-12-31'))
+# SH2=SHconcentration[7::12,:,:]
+# print(SH2)
+
+# # SIC=dset_sliced['siconc']
+# monthly_mean = dset_sliced.groupby('time.month').mean(dim='time')
+# SI_March=monthly_mean['siconc'][2,:,:]
+# lat = dset_sliced.variables['latitude'][:]
+# lon = dset_sliced.variables['longitude'][:]
+
+# SHlat_M = np.array(dset_sliced['latitude'][:,:])
+# SHlon_M =np.array(dset_sliced['longitude'][:,:])
+# SHsiconc_M=np.array(SI_March)
+# # print(monthly_mean)
+# # print(SHsiconc_M)
+# # print(SI_March)
+
+# fig, ax = plt.subplots(figsize=(10, 10))
+# m = Basemap(projection='spstere', boundinglat=-60, lon_0=180, resolution='l', ax=ax, round=True)
+# m.drawcoastlines()
+# m.drawcountries()
+
+# lon, lat = np.meshgrid(lon1, lat1)
+# x, y = m(lon, lat)
+# cs = m.contourf(SHlon_M, SHlat_M, SHlat_M, cmap='coolwarm')
+
+# cbar = m.colorbar(cs, location='bottom', pad='10%')
+# cbar.set_label('SICONC')
+# plt.title('SICONC March 1979-2017')
+# # plt.show()
+# plt.savefig('my_plot.png')
+# ---------------------------------------------------------------------------
+# %%% Load OSI450 NH & SH siconc and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km
+# ---------------------------------------------------------------------------
+# Second dataset comparison (not needed)
+
 
 ## Using only model CMCC-CM2-SR5/C   OMIP1                                      
-
-#%%---------------------------------------------------------------------------------------------------------------------------------
-# Load 1980-2007 model output data and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km |
-#---------------------------------------------------------------------------------------------------------------------------------
-path='/sea ice data/OMIP/All OMIP data/r1i1p1f1/siconc/1980_2007/'
-files=os.listdir(path)
-for file in files:
-  print(file)
-  dset = xr.open_dataset(os.path.join(path,file))
-  if file.startswith('siconc_SImon_IPSL'):
-    lat=np.array(dset['nav_lat'][:,:])
-    lon=np.array(dset['nav_lon'][:,:])
-    field = np.array(np.squeeze(dset['siconc'][:,:,:]))
-  elif file.startswith('siconc_SImon_GFDL-CM4'):
-    lat0=np.array(dset['lat'])
-    lon0=np.array(dset['lon'])
-    field0 = np.array(np.squeeze(dset['siconc'][:,:,:]))
-    idx1=np.where(lon0<0)
-    lon0[idx1]=lon0[idx1]+360
-    lon=np.zeros((1080,1440))
-    lat=np.zeros((1080,1440))
-    field=np.zeros(((336,1080,1440)))
-    lon[:,0:960]=lon0[:,480:1440]
-    lon[:,960:1440]=lon0[:,0:480]
-    lat[:,0:960]=lat0[:,480:1440]
-    lat[:,960:1440]=lat0[:,0:480]
-    field[:,:,0:960]=field0[:,:,480:1440]
-    field[:,:,960:1440]=field0[:,:,0:480]
-  elif file.startswith('siconc_SImon_GFDL-OM4p5B'):
-    lat0=np.array(dset['lat'])
-    lon0=np.array(dset['lon'])
-    field0 = np.array(np.squeeze(dset['siconc'][:,:,:]))
-    idx1=np.where(lon0<0)
-    lon0[idx1]=lon0[idx1]+360
-    lon=np.zeros((576,720))
-    lat=np.zeros((576,720))
-    field=np.zeros(((336,576,720)))
-    lon[:,0:480]=lon0[:,240:720]
-    lon[:,480:720]=lon0[:,0:240]
-    lat[:,0:480]=lat0[:,240:720]
-    lat[:,480:720]=lat0[:,0:240]
-    field[:,:,0:480]=field0[:,:,240:720]
-    field[:,:,480:720]=field0[:,:,0:240]
-  else:
-    lat=np.array(dset['latitude'][:,:])
-    lon=np.array(dset['longitude'][:,:])
-    field = np.array(np.squeeze(dset['siconc'][:,:,:]))
+# ---------------------------------------------------------------------------
+# %%% Load 1980-2007 model output data and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km 
+# ---------------------------------------------------------------------------
+path='/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/SITool/SICONC/Model-Data/'
+print(dset)
+# files=os.listdir(path)
+# for file in files:
+#   print(file)
+#   dset = xr.open_dataset(os.path.join(path,file))
+#   if file.startswith('siconc_SImon_IPSL'):
+#     lat=np.array(dset['nav_lat'][:,:])
+#     lon=np.array(dset['nav_lon'][:,:])
+#     field = np.array(np.squeeze(dset['siconc'][:,:,:]))
+#   elif file.startswith('siconc_SImon_GFDL-CM4'):
+#     lat0=np.array(dset['lat'])
+#     lon0=np.array(dset['lon'])
+#     field0 = np.array(np.squeeze(dset['siconc'][:,:,:]))
+#     idx1=np.where(lon0<0)
+#     lon0[idx1]=lon0[idx1]+360
+#     lon=np.zeros((1080,1440))
+#     lat=np.zeros((1080,1440))
+#     field=np.zeros(((336,1080,1440)))
+#     lon[:,0:960]=lon0[:,480:1440]
+#     lon[:,960:1440]=lon0[:,0:480]
+#     lat[:,0:960]=lat0[:,480:1440]
+#     lat[:,960:1440]=lat0[:,0:480]
+#     field[:,:,0:960]=field0[:,:,480:1440]
+#     field[:,:,960:1440]=field0[:,:,0:480]
+#   elif file.startswith('siconc_SImon_GFDL-OM4p5B'):
+#     lat0=np.array(dset['lat'])
+#     lon0=np.array(dset['lon'])
+#     field0 = np.array(np.squeeze(dset['siconc'][:,:,:]))
+#     idx1=np.where(lon0<0)
+#     lon0[idx1]=lon0[idx1]+360
+#     lon=np.zeros((576,720))
+#     lat=np.zeros((576,720))
+#     field=np.zeros(((336,576,720)))
+#     lon[:,0:480]=lon0[:,240:720]
+#     lon[:,480:720]=lon0[:,0:240]
+#     lat[:,0:480]=lat0[:,240:720]
+#     lat[:,480:720]=lat0[:,0:240]
+#     field[:,:,0:480]=field0[:,:,240:720] 
+#     field[:,:,480:720]=field0[:,:,0:240]
+#   else:
+lat=np.array(dset['latitude'][:,:])
+lon=np.array(dset['longitude'][:,:])
+field = np.array(np.squeeze(dset['siconc'][:,:,:]))
   
-  idx=np.where((abs(field)>10000))
-  field[idx]=np.nan
-  idx1=np.where(abs(lon)>10000)
-  lon[idx1]=np.nan
-  lat[idx1]=np.nan
-  a = lon.shape[0]
-  b = lon.shape[1]
-  for i in range(a):
-    for j in range(b):
-      if lon[i,j]>180:
-        lon[i,j] = lon[i,j]-360
+idx=np.where((abs(field)>10000))
+field[idx]=np.nan
+idx1=np.where(abs(lon)>10000)
+lon[idx1]=np.nan
+lat[idx1]=np.nan
+a = lon.shape[0]
+b = lon.shape[1]
+for i in range(a):
+  for j in range(b):
+    if lon[i,j]>180:
+      lon[i,j] = lon[i,j]-360
 
   siconc=compute_interp(lat,lon,field)
   NHconcentration=siconc[0]
   SHconcentration=siconc[1]
   # np.savez(file[13:31]+'_1980_2007_siconc.npz', NHlat_curv, NHlon_curv, NHconcentration, SHlat_curv, SHlon_curv, SHconcentration)
-  np.savez(file[13:31]+'_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)
+  # np.savez(file[13:31]+'_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)
 
-# %%--------------------------------------------------------
-# PART 6) A script computes the ice concentration metrics |
-# --------------------------------------------------------
+# %% PART 6) A script computes the ice concentration metrics
+
 #typical errors-differences between two observations
 a=np.load('NSIDC0051_1980_2007_siconc.npz')
-# NHconcentration1=a['arr_2']/100 
 SHconcentration1=a['arr_5']/100
-# NHcellarea=a['arr_6']
 SHcellarea=a['arr_7']
 # a=np.load('OSI450_1980_2007_siconc.npz') ##X
-# NHconcentration2=a['arr_2']/100
 SHconcentration2=a['arr_5']/100
-# NHtyerror=compute_siconc_metrics(NHconcentration1, NHconcentration2, NHcellarea)
 SHtyerror=compute_siconc_metrics(SHconcentration1, SHconcentration2, SHcellarea)
 
-name=['CMCC-CM2-HR4_omip2_1980_2007_siconc.npz', 'CMCC-CM2-SR5_omip1_1980_2007_siconc.npz', 'CMCC-CM2-SR5_omip2_1980_2007_siconc.npz', 'EC-Earth3_omip1_r1_1980_2007_siconc.npz','EC-Earth3_omip2_r1_1980_2007_siconc.npz', 'GFDL-CM4_omip1_r1i_1980_2007_siconc.npz', 'GFDL-OM4p5B_omip1__1980_2007_siconc.npz', 'IPSL-CM6A-LR_omip1_1980_2007_siconc.npz',  'MIROC6_omip1_r1i1p_1980_2007_siconc.npz', 'MIROC6_omip2_r1i1p_1980_2007_siconc.npz', 'MRI-ESM2-0_omip1_r_1980_2007_siconc.npz', 'MRI-ESM2-0_omip2_r_1980_2007_siconc.npz', 'NorESM2-LM_omip1_r_1980_2007_siconc.npz', 'NorESM2-LM_omip2_r_1980_2007_siconc.npz']
-# NHerror_mean1=np.zeros(14)
+name=['CMCC-CM2-SR5_omip1_1980_2007_siconc.npz']
 SHerror_mean1=np.zeros(14)
-# NH_error_std1=np.zeros(14)
 SH_error_std1=np.zeros(14)
-# NH_error_trend1=np.zeros(14)
 SH_error_trend1=np.zeros(14)
 Metrics_siconc=np.zeros((17, 6))
 for obs in range(2):
@@ -469,53 +445,35 @@ for obs in range(2):
     i='NSIDC0051'
     for num in range(14):
       a=np.load(path + name[num])
-      # NHconcentration=a['arr_2']/100
       SHconcentration=a['arr_5']/100
-      # NHMetrics=compute_siconc_metrics(NHconcentration, NHconcentration1, NHcellarea)
       SHMetrics=compute_siconc_metrics(SHconcentration, SHconcentration1, SHcellarea)
-      # NHerror_mean1[num]=NHMetrics[0]#NHerror_mean
       SHerror_mean1[num]=SHMetrics[0]#SHerror_mean
-      # NH_error_std1[num]=NHMetrics[1]#NH_error_std
       SH_error_std1[num]=SHMetrics[1]#SH_error_std
-      # NH_error_trend1[num]=NHMetrics[2]#NH_error_trend
       SH_error_trend1[num]=SHMetrics[2]#SH_error_trend
   else:#models vs OSI-450
     i='OSI450' 
     for num in range(14):
       a=np.load(path + name[num])
-      # NHconcentration=a['arr_2']/100
       SHconcentration=a['arr_5']/100
-      # NHMetrics=compute_siconc_metrics(NHconcentration, NHconcentration2, NHcellarea)
       SHMetrics=compute_siconc_metrics(SHconcentration, SHconcentration2, SHcellarea)
-      # NHerror_mean1[num]=NHMetrics[0]#NHerror_mean
       SHerror_mean1[num]=SHMetrics[0]#SHerror_mean
-      # NH_error_std1[num]=NHMetrics[1]#NH_error_std
       SH_error_std1[num]=SHMetrics[1]#SH_error_std
-      # NH_error_trend1[num]=NHMetrics[2]#NH_error_trend
       SH_error_trend1[num]=SHMetrics[2]#SH_error_trend
 
-  # Metrics_siconc[0:14,0]=NHerror_mean1/NHtyerror[0]
-  # Metrics_siconc[0:14,1]=NH_error_std1/NHtyerror[1]
-  # Metrics_siconc[0:14,2]=NH_error_trend1/NHtyerror[2]
   Metrics_siconc[0:14,3]=SHerror_mean1/SHtyerror[0]
   Metrics_siconc[0:14,4]=SH_error_std1/SHtyerror[1]
   Metrics_siconc[0:14,5]=SH_error_trend1/SHtyerror[2]
-  # Metrics_siconc[14,0]=np.mean(NHerror_mean1)/NHtyerror[0]
-  # Metrics_siconc[14,1]=np.mean(NH_error_std1)/NHtyerror[1]
-  # Metrics_siconc[14,2]=np.mean(NH_error_trend1)/NHtyerror[2]
+
   Metrics_siconc[14,3]=np.mean(SHerror_mean1)/SHtyerror[0]
   Metrics_siconc[14,4]=np.mean(SH_error_std1)/SHtyerror[1]
   Metrics_siconc[14,5]=np.mean(SH_error_trend1)/SHtyerror[2] 
   Metrics_siconc[15,:]=(Metrics_siconc[1,:]+Metrics_siconc[3,:]+Metrics_siconc[8,:]+Metrics_siconc[10,:]+Metrics_siconc[12,:])/5#OMIP1 mean
-  # Metrics_siconc[16,:]=(Metrics_siconc[2,:]+Metrics_siconc[4,:]+Metrics_siconc[9,:]+Metrics_siconc[11,:]+Metrics_siconc[13,:])/5#OMIP2 mean
-  # np.savez('siconc_metrics_'+str(i)+'.npz', Metrics_siconc, NHerror_mean1, SHerror_mean1, NH_error_std1, SH_error_std1, NH_error_trend1, SH_error_trend1)
   np.savez('siconc_metrics_'+str(i)+'.npz', Metrics_siconc, SHerror_mean1, SH_error_std1, SH_error_trend1)
 
-# %%-------------------------------------------------------------
-# PART 7) A script plots the ice concentration metrics (Fig. 2)|
-# -------------------------------------------------------------
-Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
-Variables=['Mean Conc. NH','Std Ano Conc. NH','Trend Ano Conc. NH','Mean Conc. SH','Std Ano Conc. SH','Trend Ano Conc. SH']
+# %% PART 7) A script plots the ice concentration metrics (Fig. 2)
+
+Models=['CMCC-CM2-SR5/C']
+Variables=['Mean Conc. SH','Std Ano Conc. SH','Trend Ano Conc. SH']
 for obs in range(2):
   if obs==0:#NSIDC-0051
     a=np.load('siconc_metrics_NSIDC0051.npz')
@@ -530,7 +488,7 @@ for obs in range(2):
   im,cbar = heatmap(values, Models,Variables, ax=ax1, cmap="OrRd", vmin=1, vmax=5) 
   texts = annotate_heatmap(im, valfmt="{x:.2f}",size=16,threshold=3.5)
   cbar.remove()
-  ax1.set_xticklabels(['Mean Conc. NH','Std Ano Conc. NH','Trend Ano Conc. NH','Mean Conc. SH','Std Ano Conc. SH','Trend Ano Conc. SH'])
+  ax1.set_xticklabels(['Mean Conc. SH','Std Ano Conc. SH','Trend Ano Conc. SH'])
   plt.setp(ax1.get_xticklabels(), fontname='Arial', fontsize=16)
   plt.setp(ax1.get_yticklabels(), fontname='Arial', fontsize=16)
   cax = fig.add_axes([0.75, 0.113, 0.01, 0.765])
@@ -544,11 +502,10 @@ for obs in range(2):
     ax1.set_title("(b) Concentration: models vs. OSI-450", fontname='Arial', fontsize=16)
     plt.savefig('./Figure2b.png', bbox_inches = "tight", dpi = 500)
 
-# %%----------------------------------------------------------------------------------------------------------------------
-# PART 8) A script plots the February and September mean ice concentration differences in both hemispheres (Figs. A1-A4)|
-# ----------------------------------------------------------------------------------------------------------------------
+# %% PART 8) A script plots the February and September mean ice concentration differences in both hemispheres (Figs. A1-A4)|
+
 # Prepare the data
-a=np.load('NSIDC0051_1980_2007_siconc.npz')
+a=np.load('/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/SITool/SICONC/NSIDC0051_1980_2007_siconc.npz')
 # NHlat_curv=a['arr_0']
 # NHlon_curv=a['arr_1']
 # NHconcentration1=a['arr_2']/100
@@ -563,20 +520,20 @@ SHconc1 = np.array([np.nanmean(SHconcentration1[m::12,:,:], axis=0) for m in ran
 idx=np.where(SHconc1 <= 0)
 SHconc1[idx]=np.nan
 
-name=['OSI-450','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','CMCC-CM2-HR4/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','MIROC6/C','MIROC6/J','GFDL-OM4p5B/C','MRI-ESM2-0/C','MRI-ESM2-0/J','IPSL-CM6A-LR/C','NorESM2-LM/C','NorESM2-LM/J']#!!!!!!
-files=['OSI450_1980_2007_siconc.npz','CMCC-CM2-SR5_omip1_1980_2007_siconc.npz', 'CMCC-CM2-SR5_omip2_1980_2007_siconc.npz', 'CMCC-CM2-HR4_omip2_1980_2007_siconc.npz','EC-Earth3_omip1_r1_1980_2007_siconc.npz','EC-Earth3_omip2_r1_1980_2007_siconc.npz', 'GFDL-CM4_omip1_r1i_1980_2007_siconc.npz', 'MIROC6_omip1_r1i1p_1980_2007_siconc.npz', 'MIROC6_omip2_r1i1p_1980_2007_siconc.npz', 'GFDL-OM4p5B_omip1__1980_2007_siconc.npz', 'MRI-ESM2-0_omip1_r_1980_2007_siconc.npz', 'MRI-ESM2-0_omip2_r_1980_2007_siconc.npz', 'IPSL-CM6A-LR_omip1_1980_2007_siconc.npz', 'NorESM2-LM_omip1_r_1980_2007_siconc.npz', 'NorESM2-LM_omip2_r_1980_2007_siconc.npz']
+name=['OSI-450','CMCC-CM2-SR5/C']#!!!!!!
+files=['OSI450_1980_2007_siconc.npz','CMCC-CM2-SR5_omip1_1980_2007_siconc.npz']
 for jt in range(4):
-  # if jt==0:
-  #   jt1=8
-  #   hemisphere = "n"
-  #   lat=NHlat_curv
-  #   lon=NHlon_curv
-  # elif jt==1:
-  #   jt1=1
-  #   hemisphere = "n"
-  #   lat=NHlat_curv
-  #   lon=NHlon_curv
-  if jt==2:
+  if jt==0:
+    jt1=8
+    hemisphere = "n"
+    # lat=NHlat_curv
+    # lon=NHlon_curv
+  elif jt==1:
+    jt1=1
+    hemisphere = "n"
+    # lat=NHlat_curv
+    # lon=NHlon_curv
+  elif jt==2:
     jt1=1
     hemisphere = "s"
     lat=SHlat_curv 
@@ -627,10 +584,10 @@ for jt in range(4):
 
     # Create a projection 
     # Determine if we are in the northern hemisphere or in the Southern hemisphere.
-    # if hemisphere == "n":
-    #   boundlat = 50
-    #   l0 = 0.
-    if hemisphere == "s":
+    if hemisphere == "n":
+      boundlat = 50
+      l0 = 0.
+    elif hemisphere == "s":
       boundlat = -50
       l0 = 180.
     else:
@@ -641,11 +598,11 @@ for jt in range(4):
     x, y = map(lon, lat)
     
     # Plot the figure 
-    # if hemisphere == "n":
+    if hemisphere == "n":
       # field = np.squeeze(NHconc1[jt1, :, :])
       # field0 = np.squeeze(NHconc[jt1, :, :])
-      # field1 = np.squeeze(NHfield[jt1, :, :])
-    if hemisphere == "s":
+       field1 = np.squeeze(NHfield[jt1, :, :])
+    elif hemisphere == "s":
       field = np.squeeze(SHconc1[jt1, :, :])
       field0 = np.squeeze(SHconc[jt1, :, :])
       field1 = np.squeeze(SHfield[jt1, :, :])
@@ -686,5 +643,3 @@ for jt in range(4):
   plt.savefig(filename + "." + imageformat, bbox_inches = "tight", dpi = dpi)
   print('Figure ' + filename + "." + imageformat + " printed")
   plt.close("fig")
-
-
