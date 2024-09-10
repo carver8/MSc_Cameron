@@ -1,4 +1,5 @@
-q# Author: Xia Lin
+# %%INFO
+# Author: Xia Lin
 # Date:   Feb 2021
 # Contents:
 # 1) A function that interpolates the input ice concentration data into the NSIDC-0051 grid, 
@@ -15,8 +16,8 @@ q# Author: Xia Lin
 # 7) A script calls the functions 3) and 4) to plot the ice concentration metrics (Fig. 2)
 # 8) A script plots the February and September mean ice concentration differences in the Arctic and Antarctic (Figs. A1-A4);
 
-# %%------------------------------------
-# PART 1) The interpolation function  |
+# ------------------------------------
+# %%PART 1) The interpolation function  |
 # ------------------------------------
 
 import pyresample
@@ -94,8 +95,8 @@ def compute_interp(lat,lon,field):
 
     return SHconcentration
 
-# %%-----------------------------------------------
-# PART 2) The ice concentration errors function  |   
+# -----------------------------------------------
+# %%PART 2) The ice concentration errors function  |   
 # -----------------------------------------------
 def compute_siconc_metrics(concentration, concentration1, cellarea):
   ''' Input: - sea ice concentration (%) in the Arctic or Antarctic from two datasets
@@ -202,8 +203,8 @@ def compute_siconc_metrics(concentration, concentration1, cellarea):
 
   return error_mean, error_std, error_trend
 
-# %%------------------------------
-# PART 3) The heatmap function  |
+# ------------------------------
+# %%PART 3) The heatmap function  |
 # ------------------------------
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -253,8 +254,8 @@ def heatmap(data, row_labels, col_labels, ax=None,
 
   return im, cbar
 
-# %%---------------------------------------
-# PART 4) The annotate heatmap function  |
+# ---------------------------------------
+# %%PART 4) The annotate heatmap function  |
 # ---------------------------------------
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
@@ -301,8 +302,8 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
             
     return texts
 
-# %% --------------------------------------------------
-# PART 5) A script deals with the input NetCDF data |
+# --------------------------------------------------
+# %%PART 5) A script deals with the input NetCDF data |
 # --------------------------------------------------   
 import os
 import sys
@@ -324,7 +325,7 @@ from mpl_toolkits.axes_grid1 import AxesGrid
 from mpl_toolkits.basemap import Basemap, addcyclic
 # Read data and interp into same grid
 # ----------------------------
-# Load NSIDC0051 NH &SH siconc
+# %%%Load NSIDC0051 NH &SH siconc
 # ----------------------------
 # access_pr_file = '/sea ice data/OBS/siconc/NSIDC-0051/siconc_r1i1p1_mon_197901-201712_nh-psn25.nc'
 
@@ -349,8 +350,8 @@ np.savez('NSIDC0051_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentrati
 
 
 
-#%%------------------------------------------------------------------------------------------------------------------------------------
-# Load OSI450 NH & SH siconc and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km
+#------------------------------------------------------------------------------------------------------------------------------------
+# %%%Load OSI450 NH & SH siconc and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km
 #------------------------------------------------------------------------------------------------------------------------------------
 # Second dataset comparison (not needed)
 # Northern Hemisphere
@@ -376,8 +377,8 @@ np.savez('OSI450_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)
 
 ## Using only model CMCC-CM2-SR5/C   OMIP1                                      
 
-#%%---------------------------------------------------------------------------------------------------------------------------------
-# Load 1980-2007 model output data and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km |
+#---------------------------------------------------------------------------------------------------------------------------------
+# %%%Load 1980-2007 model output data and interp into NSIDC0051 the Polar stereographic projection at a grid cell size of 25 x 25 km |
 #---------------------------------------------------------------------------------------------------------------------------------
 path='/sea ice data/OMIP/All OMIP data/r1i1p1f1/siconc/1980_2007/'
 files=os.listdir(path)
@@ -441,8 +442,8 @@ for file in files:
   # np.savez(file[13:31]+'_1980_2007_siconc.npz', NHlat_curv, NHlon_curv, NHconcentration, SHlat_curv, SHlon_curv, SHconcentration)
   np.savez(file[13:31]+'_1980_2007_siconc.npz', SHlat_curv, SHlon_curv, SHconcentration)
 
-# %%--------------------------------------------------------
-# PART 6) A script computes the ice concentration metrics |
+# --------------------------------------------------------
+# %%PART 6) A script computes the ice concentration metrics |
 # --------------------------------------------------------
 #typical errors-differences between two observations
 a=np.load('NSIDC0051_1980_2007_siconc.npz')
@@ -511,8 +512,8 @@ for obs in range(2):
   # np.savez('siconc_metrics_'+str(i)+'.npz', Metrics_siconc, NHerror_mean1, SHerror_mean1, NH_error_std1, SH_error_std1, NH_error_trend1, SH_error_trend1)
   np.savez('siconc_metrics_'+str(i)+'.npz', Metrics_siconc, SHerror_mean1, SH_error_std1, SH_error_trend1)
 
-# %%-------------------------------------------------------------
-# PART 7) A script plots the ice concentration metrics (Fig. 2)|
+# -------------------------------------------------------------
+# %%PART 7) A script plots the ice concentration metrics (Fig. 2)|
 # -------------------------------------------------------------
 Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
 Variables=['Mean Conc. NH','Std Ano Conc. NH','Trend Ano Conc. NH','Mean Conc. SH','Std Ano Conc. SH','Trend Ano Conc. SH']
@@ -544,8 +545,8 @@ for obs in range(2):
     ax1.set_title("(b) Concentration: models vs. OSI-450", fontname='Arial', fontsize=16)
     plt.savefig('./Figure2b.png', bbox_inches = "tight", dpi = 500)
 
-# %%----------------------------------------------------------------------------------------------------------------------
-# PART 8) A script plots the February and September mean ice concentration differences in both hemispheres (Figs. A1-A4)|
+# ----------------------------------------------------------------------------------------------------------------------
+# %%PART 8) A script plots the February and September mean ice concentration differences in both hemispheres (Figs. A1-A4)|
 # ----------------------------------------------------------------------------------------------------------------------
 # Prepare the data
 a=np.load('NSIDC0051_1980_2007_siconc.npz')
