@@ -25,17 +25,13 @@ model_ds = xr.open_dataset(access_model_data)
 access_ref_data = 'G02202-cdr-ancillary-sh.nc'
 ref_ds = xr.open_dataset(access_ref_data)
 
-# %% Observation Data
-access_obs_data='seaice_conc_monthly_sh_f13_200001_v03r01.nc'
-obs_ds = xr.open_dataset(access_obs_data)
-
 # %% INPUT - MODEL
 # Let's look at the grid shape itself and the data for one time step
 fig, axs = plt.subplots(ncols=2, figsize=(12, 4))
 
 axs[0].scatter(x=model_ds.longitude.values, y=model_ds.latitude.values, s=0.1)
 axs[0].set_title(
-    "The input horizontal grid points as seen on a lat/lon map.\nOnly the northern hemisphere is shown."
+    "The input horizontal grid points as seen on a lat/lon map."
 )
 axs[0].set_ylim(-90, -50)
 axs[0].set_ylabel(f"latitude [{model_ds.latitude.units}]")
@@ -69,13 +65,12 @@ warnings.filterwarnings("ignore", category=FutureWarning)
 # Apply the regridding weights to the input sea ice concentration data
 sic_bil = reg_bil(model_ds.siconc)
 
-# %% Plot the results
+model_rp = xr.Dataset({"siconc": sic_bil})
+model_rp.to_netcdf('siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912_reproj.nc')
 
-# for i in range(0,1,1):
+# %% Visualisation
+
+# for i in range(0,11,1):
 #     fig = plt.figure()
-sic_bil.isel(time=1).plot(cmap=cmap)
+model_rp.siconc.isel(time=10).plot(cmap=cmap)
 plt.title("Regridded siconc data");
-
-
-
-
