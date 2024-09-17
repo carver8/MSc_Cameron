@@ -15,6 +15,8 @@ for file_path in data_dir:
 combined = xr.concat(datasets, dim='tdim')
 combined = combined.assign_coords(tdim=combined['time'], x=combined['xgrid'], y=combined['ygrid'])
 combined = combined.sortby('tdim')
+siconc = combined['cdr_seaice_conc_monthly']/2.55*100 # Convert siconc to a percentage
+combined['siconc'] = siconc
 
 # Define desired name of combined file
 combined.to_netcdf('seaice_conc_monthly_sh_n07_v04r00_all.nc')
