@@ -131,7 +131,7 @@ def compute_siconc_metrics(concentration, concentration1, cellarea):
           mask[jt,jy,jx] = 1.0
   #Calculate the global error by hemisphere
   error_mean_monthly = np.array([(np.nansum(error_mean_conc[m,:,:]*cellarea*mask[m,:,:])/np.nansum(cellarea*mask[m,:,:])) for m in range(12)])
-  ndpm=[31,28,31,30,31,30,31,31,30,31,30,31];
+  ndpm=[31,28,31,30,31,30,31,31,30,31,30,31]; #Number of days per month
   error_mean=np.sum(error_mean_monthly*ndpm)/np.sum(ndpm)
   print(error_mean)
   #=======================================================================
