@@ -17,7 +17,7 @@
 # 8) A script calls the functions 3) and 4) to plot the ice extent metrics (Figs. 5a,b)
 
 # ---------------------------------------------
-# PART 1) The ice extent calculation function  |   
+# %%ART 1) The ice extent calculation function  |   
 # ---------------------------------------------
 def compute_extent(concentration, cellarea, threshold = 0.15, mask = 1):
   '''Input: - sea ice concentration (%)
@@ -44,7 +44,7 @@ def compute_extent(concentration, cellarea, threshold = 0.15, mask = 1):
   return ext
 
 # ----------------------------------------
-# PART 2) The ice extent errors function  |   
+# %%PART 2) The ice extent errors function  |   
 # ----------------------------------------
 def compute_siext_metrics(extent, extent1):
   '''Input: - sea ice extent (10^6 km2) in the Arctic or Antarctic from two datasets
@@ -67,7 +67,7 @@ def compute_siext_metrics(extent, extent1):
   return error_mean, error_std, error_trend
 
 # ------------------------------
-# PART 3) The heatmap function  |
+# %%PART 3) The heatmap function  |
 # ------------------------------
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -118,7 +118,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 # ---------------------------------------
-# PART 4) The annotate heatmap function  |
+# %%PART 4) The annotate heatmap function  |
 # ---------------------------------------
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
@@ -166,7 +166,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 # ----------------------------------------------------------------------------------------------------
-# PART 5) A script to plot the mean seasonal cycle of ice extent in the Arctic and Antarctic (Fig. 3) |
+# %%PART 5) A script to plot the mean seasonal cycle of ice extent in the Arctic and Antarctic (Fig. 3) |
 # ----------------------------------------------------------------------------------------------------
 import os
 import sys
@@ -370,7 +370,7 @@ plt.savefig("./Figure3.png", bbox_inches = "tight", dpi = 500)
 plt.close()
 
 # -------------------------------------------------------------------------
-# PART 6) A script to plot the monthly anomalies of ice extent from the    |
+# %%PART 6) A script to plot the monthly anomalies of ice extent from the    |
 #         observational and model mean in the Arctic and Antarctic (Fig. 4)|
 # -------------------------------------------------------------------------
 #Anomalies & Trend
@@ -504,7 +504,7 @@ plt.savefig("./Figure4.png", dpi = 500, bbox_inches = "tight")
 plt.close()
 
 # ---------------------------------------------------------
-# PART 7) A script computes the ice extent and its metrics |
+# %%PART 7) A script computes the ice extent and its metrics |
 # ---------------------------------------------------------
 #typical errors-differences between two observations
 a=np.load('NSIDC0051_1980_2007_siconc.npz')
@@ -581,7 +581,7 @@ for obs in range(2):
   np.savez('siext_metrics_'+str(i)+'.npz', Metrics_siext, NHerror_mean1, SHerror_mean1, NH_error_std1, SH_error_std1, NH_error_trend1, SH_error_trend1)
 
 # ----------------------------------------------------------
-# PART 8) A script plots the ice extent metrics (Figs. 5a,b)|
+# %%PART 8) A script plots the ice extent metrics (Figs. 5a,b)|
 # ----------------------------------------------------------
 Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
 Variables=['Mean Ext. NH','Std Ano Ext. NH','Trend Ano Ext. NH','Mean Ext. SH','Std Ano Ext. SH','Trend Ano Ext. SH']
