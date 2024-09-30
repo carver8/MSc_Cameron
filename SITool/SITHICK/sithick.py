@@ -15,7 +15,7 @@
 # 8) A script plots the February (Arctic) and September (Antarctic) mean ice thickness differences (Figs. A5-A6);
 
 # ------------------------------------
-# PART 1) The interpolation function  |
+# %%PART 1) The interpolation function  |
 # ------------------------------------
 def compute_interp(lat,lon,field):
   ''' Input: -latitude, longitude of the original grid
@@ -94,7 +94,7 @@ def compute_interp(lat,lon,field):
     return NHconcentration, SHconcentration
 
 # --------------------------------------------
-# PART 2) The ice thickness errors function  |   
+# %%PART 2) The ice thickness errors function  |   
 # --------------------------------------------
 def compute_sithick_metrics(thickness0, thickness1):
   ''' Input: - sea ice thickness (m) in the Arctic or Antarctic from two datasets
@@ -128,7 +128,7 @@ def compute_sithick_metrics(thickness0, thickness1):
   return error_mean
 
 # ------------------------------
-# PART 3) The heatmap function  |
+# %%PART 3) The heatmap function  |
 # ------------------------------
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -179,7 +179,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 # ---------------------------------------
-# PART 4) The annotate heatmap function  |
+# %%PART 4) The annotate heatmap function  |
 # ---------------------------------------
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
@@ -227,7 +227,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 # --------------------------------------------------
-# PART 5) A script deals with the input NetCDF data |
+# %%PART 5) A script deals with the input NetCDF data |
 # --------------------------------------------------
 import os
 import sys
@@ -249,7 +249,7 @@ from mpl_toolkits.axes_grid1 import AxesGrid
 from mpl_toolkits.basemap import Basemap, addcyclic
 # Read data and interp into same grid
 #----------------------------
-#Load NSIDC0051 NH & SH grid |
+# Load NSIDC0051 NH & SH grid |
 #----------------------------
 access_pr_file = '/sea ice data/OBS/siconc/NSIDC-0051/siconc_r1i1p1_mon_197901-201712_nh-psn25.nc'
 dset = xr.open_dataset(access_pr_file)
@@ -418,7 +418,7 @@ for file in files:
   np.savez(file[14:32]+'_2003_2007_sithick.npz', NHlat_curv, NHlon_curv, NHthick, SHlat_curv, SHlon_curv, SHthick)
 
 # ----------------------------------------------------
-# PART 6) A script computes the ice thickness metrics |
+# %%PART 6) A script computes the ice thickness metrics |
 # ----------------------------------------------------
 # Envisat
 a=np.load('Envisat_2003_2007_sithick.npz')
@@ -571,7 +571,7 @@ Metrics_sithick[16,:]=(Metrics_sithick[2,:]+Metrics_sithick[4,:]+Metrics_sithick
 np.savez('metric_icethick_IceSat.npz', Metrics_sithick,NHerror_mean1,SHerror_mean1) 
 
 # ----------------------------------------------------------
-# PART 7) A script plots the ice thickness metrics (Fig. 7a)| 
+# %%PART 7) A script plots the ice thickness metrics (Fig. 7a)| 
 # ----------------------------------------------------------
 Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
 Variables=['Mean Thickness NH','Mean Thickness SH','Mean Thickness NH','Mean Thickness SH']
@@ -600,7 +600,7 @@ ax1.set_title("(a) Thickness: models vs. Envisat & Icesat", fontname='Arial', fo
 plt.savefig('./Figure7a.png', bbox_inches = "tight", dpi = 500)
 
 # -------------------------------------------------------------------------------------------------------------------
-# PART 8) A script plots the February (Arctic) and September (Antarctic) mean ice thickness differences (Figs. A5-A6)|
+# %%PART 8) A script plots the February (Arctic) and September (Antarctic) mean ice thickness differences (Figs. A5-A6)|
 # -------------------------------------------------------------------------------------------------------------------
 # 2003-2007 Envisat: Arctic:1-4,11,12 February  Antarctic: 5-10 Sept. 
 # ICESat: 13 measurement campaigns for the Arctic and 11 for the Antarctic, 
