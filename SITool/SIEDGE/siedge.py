@@ -14,7 +14,7 @@
 # 6) A script calls the functions 2) and 3) to plot the ice edge metrics (Fig. 5c)
 
 # ---------------------------------------------------------
-# PART 1) The Intergrated Ice Edge Error (IIEE) function  |   
+# %%PART 1) The Intergrated Ice Edge Error (IIEE) function  |   
 # ---------------------------------------------------------
 def compute_siedge_metrics(concentration, concentration1, cellarea):
   ''' Input: - sea ice concentration (%) in the Arctic or Antarctic from two datasets
@@ -40,7 +40,7 @@ def compute_siedge_metrics(concentration, concentration1, cellarea):
   return IIEE, AEE, ME, error_mean
 
 # ------------------------------
-# PART 2) The heatmap function  |
+# %%PART 2) The heatmap function  |
 # ------------------------------
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -91,7 +91,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 # ---------------------------------------
-# PART 3) The annotate heatmap function  |
+# %%PART 3) The annotate heatmap function  |
 # ---------------------------------------
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
@@ -139,7 +139,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 # -------------------------------------------------------------------------------------
-# PART 4) A script to plot the mean seasonal cycle of IIEE in the Arctic and Antarctic |
+# %%PART 4) A script to plot the mean seasonal cycle of IIEE in the Arctic and Antarctic |
 # -------------------------------------------------------------------------------------
 import os
 import sys
@@ -317,7 +317,7 @@ plt.savefig("./Figure6.png", bbox_inches = "tight", dpi = 500)
 plt.close()
   
 # ----------------------------------------------------------------------
-# PART 5) A script computes the ice edge location error and its metrics |
+# %%PART 5) A script computes the ice edge location error and its metrics |
 # ----------------------------------------------------------------------
 #typical errors-differences between two observations
 a=np.load('NSIDC0051_1980_2007_siconc.npz')
@@ -365,7 +365,7 @@ Metrics_siedge[16,:]=(Metrics_siedge[2,:]+Metrics_siedge[4,:]+Metrics_siedge[9,:
 np.savez('siedge_metrics_NSIDC0051&OSI-450.npz', Metrics_siedge, NHerror_mean1, SHerror_mean1, NHerror_mean2, SHerror_mean2)
 
 # -----------------------------------------------------
-# PART 6) A script plots the ice edge metrics (heatmap)|
+# %%PART 6) A script plots the ice edge metrics (heatmap)|
 # -----------------------------------------------------
 Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
 Variables=['Mean Edge NH','Mean Edge SH','Mean Edge NH','Mean Edge SH']
