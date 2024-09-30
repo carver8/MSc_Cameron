@@ -19,13 +19,11 @@ cmap = copy.copy(plt.cm.get_cmap("magma"))
 cmap.set_bad("lightgrey")
 
 # %% Import Reference Data (TARGET)
-access_ref_data = 'MODELS/SICONC/G02202-cdr-ancillary-sh.nc'
+access_ref_data = 'OBSERVATIONS/SICONC/G02202-cdr-ancillary-sh.nc'
 ref_ds = xr.open_dataset(access_ref_data)
 
-ref_ds
-
 # %% Import Model Data (SOURCE)
-access_model_data = 'siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc' #access sea ice dataset
+access_model_data = 'MODELS/SICONC/siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc' #access sea ice dataset
 model_ds = xr.open_dataset(access_model_data)
 
 # %% INPUT - MODEL
@@ -33,9 +31,7 @@ model_ds = xr.open_dataset(access_model_data)
 fig, axs = plt.subplots(ncols=2, figsize=(12, 4))
 
 axs[0].scatter(x=model_ds.longitude.values, y=model_ds.latitude.values, s=0.1)
-axs[0].set_title(
-    "The input horizontal grid points as seen on a lat/lon map."
-)
+axs[0].set_title("The input horizontal grid points as seen on a lat/lon map.")
 axs[0].set_ylim(-90, -50)
 axs[0].set_ylabel(f"latitude [{model_ds.latitude.units}]")
 axs[0].set_xlabel(f"longitude [{model_ds.longitude.units}]")
@@ -71,7 +67,7 @@ tct = model_rp.coords['time'].size
 for i in range(0,tct,1):
     model_rp['siconc'][i,:,:] = model_rp['siconc'][i,:,:]*mask
 
-model_rp.to_netcdf('siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912_reproj.nc')
+model_rp.to_netcdf('/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/Data/MODELS/SICONC/siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912_reproj.nc')
 
 # %% Visualisation
 
