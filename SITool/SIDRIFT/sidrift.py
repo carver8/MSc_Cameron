@@ -18,7 +18,7 @@
 # 12) A script plots the February and September mean ice-motion mean kinetic energy differences in the Arctic and Antarctic (Figs. A9-A12);
 
 # -------------------------------
-# PART 1) The rotation function  |
+# %%PART 1) The rotation function  |
 # -------------------------------
 def deg2rad(angle):
   """
@@ -80,7 +80,7 @@ def compute_rotate(glamt,gphit,u,v,glamv,gphiv,hems):
   return ux, vy
 
 # --------------------------------------------------
-# PART 2) The interpolation and correction function |
+# %%PART 2) The interpolation and correction function |
 # --------------------------------------------------
 def compute_interp_correct(lon, lat, u, v, hems):
   ''' Input: -latitude, longitude of the original grid
@@ -182,7 +182,7 @@ def compute_interp_correct(lon, lat, u, v, hems):
   return ux1, vy1
 
 # -------------------------------------------------------
-# PART 3) The ice-motion magnitude (MKE) errors function |     
+# %%PART 3) The ice-motion magnitude (MKE) errors function |     
 # -------------------------------------------------------
 def compute_MKE_metrics(MKE, MKE1):
   ''' Input: - Mean Kinetic Energy (MKE) in the Arctic or Antarctic from two datasets
@@ -218,7 +218,7 @@ def compute_MKE_metrics(MKE, MKE1):
   return error_mean
 
 # ----------------------------------------------------------------
-# PART 4) The ice-motion vector correlation coefficients function |     
+# %%PART 4) The ice-motion vector correlation coefficients function |     
 # ----------------------------------------------------------------
 def compute_vectorcorr_metrics(u1, u2, v1, v2):
   ''' 
@@ -285,7 +285,7 @@ def compute_vectorcorr_metrics(u1, u2, v1, v2):
   return corr, corrmean
 
 # ------------------------------
-# PART 5) The heatmap function  |
+# %%PART 5) The heatmap function  |
 # ------------------------------
 def heatmap(data, row_labels, col_labels, ax=None,
             cbar_kw={}, cbarlabel="", **kwargs):
@@ -336,7 +336,7 @@ def heatmap(data, row_labels, col_labels, ax=None,
     return im, cbar
 
 # ---------------------------------------
-# PART 6) The annotate heatmap function  |
+# %%PART 6) The annotate heatmap function  |
 # ---------------------------------------
 def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
                      textcolors=("black", "white"),
@@ -384,7 +384,7 @@ def annotate_heatmap(im, data=None, valfmt="{x:.2f}",
     return texts
 
 # --------------------------------------------------
-# PART 7) A script deals with the input NetCDF data |
+# %%PART 7) A script deals with the input NetCDF data |
 # --------------------------------------------------   
 import os
 import sys
@@ -616,7 +616,7 @@ for num in range(14):
       np.savez(name[num][0:37]+'_SH_corrected.npz', SHlon1, SHlat1, u2, v2)
 
 # -----------------------------------------------------
-# PART 8) A script computes the ice-motion MKE metrics |
+# %%PART 8) A script computes the ice-motion MKE metrics |
 # -----------------------------------------------------
 #typical errors-differences between two observations
 a=np.load('ICDC_NSIDC_NH_200301_200712_siuv_corrected.npz')
@@ -676,7 +676,7 @@ for obs in range(2):
   np.savez('sidrift_metrics_MKE_'+str(i)+'.npz', Metrics_sidrift, NHerror_mean1, SHerror_mean1)
 
 # ---------------------------------------------------------------------------------
-# PART 9) A script computes the ice-motion vector correlation coefficients metrics |
+# %%PART 9) A script computes the ice-motion vector correlation coefficients metrics |
 # ---------------------------------------------------------------------------------
 #typical errors-differences between two observations
 a=np.load('ICDC_NSIDC_NH_200301_200712_siuv_corrected.npz')
@@ -743,7 +743,7 @@ for obs in range(2):
   np.savez('sidrift_metrics_vectorcorr_'+str(i)+'.npz', Metrics_sidrift, NHerror_mean1, SHerror_mean1, NHerror, SHerror, NHtyerror1, SHtyerror1)
 
 # -------------------------------------------------------------------------------------------------------
-# PART 10) A script plots the ice vector correlation coefficients in the Arctic and Antarctic (Figs. 8-9)|
+# %%PART 10) A script plots the ice vector correlation coefficients in the Arctic and Antarctic (Figs. 8-9)|
 # -------------------------------------------------------------------------------------------------------
 name1=['ICDC-NSIDCv4.1','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','CMCC-CM2-HR4/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','MIROC6/C','MIROC6/J','GFDL-OM4p5B/C','MRI-ESM2-0/C','MRI-ESM2-0/J','IPSL-CM6A-LR/C','NorESM2-LM/C','NorESM2-LM/J']
 name2=['ICDCNSIDC','CMCC-CM2-SR501','CMCC-CM2-SR502','CMCC-CM2-HR402','EC-Earth301','EC-Earth302','GFDL-CM401','MIROC601','MIROC602','GFDL-OM4p5B01','MRI-ESM2-001','MRI-ESM2-002','IPSL-CM6A-LR01','NorESM2-LM01','NorESM2-LM02']
@@ -856,7 +856,7 @@ for hems in range(2):
   plt.close("fig")
 
 # -------------------------------------------------------
-# PART 11) A script plots the ice drift metrics (Fig. 10)|
+# %% PART 11) A script plots the ice drift metrics (Fig. 10)|
 # -------------------------------------------------------
 Models=['CMCC-CM2-HR4/J','CMCC-CM2-SR5/C','CMCC-CM2-SR5/J','EC-Earth3/C','EC-Earth3/J','GFDL-CM4/C','GFDL-OM4p5B/C','IPSL-CM6A-LR/C','MIROC6/C','MIROC6/J','MRI-ESM2-0/C','MRI-ESM2-0/J','NorESM2-LM/C','NorESM2-LM/J','Model mean','Model mean/C','Model mean/J']
 Variables=['Mean Kin. En. NH', 'Mean Kin. En. SH','Mean Kin. En. NH', 'Mean Kin. En. SH']
@@ -908,7 +908,7 @@ ax1.set_title("(b) Drift direction: \n models vs. NSIDC & KIMURA", fontname='Ari
 plt.savefig('./Figure10b.png', bbox_inches = "tight", dpi = 500)
 
 # ---------------------------------------------------------------------------------------
-# PART 12) A script plots the February and September mean ice-motion mean kinetic energy |
+# %% PART 12) A script plots the February and September mean ice-motion mean kinetic energy |
 #          differences in the Arctic and Antarctic (Figs. A9-A12);                       |
 # ---------------------------------------------------------------------------------------
 a=np.load('KIMURA_NH_200301_200712_siuv_corrected') 
