@@ -25,8 +25,6 @@ search_url='http://localhost:8080/esg-search/wget?dataset_id=CMIP6.OMIP.MIROC.MI
 
 #These are the embedded files to be downloaded
 download_files="$(cat <<EOF--dataset.file.url.chksum_type.chksum
-'siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_169801-179712.nc' 'https://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/OMIP/MIROC/MIROC6/omip2/r2i1p1f1/SImon/siconc/gn/v20200612/siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_169801-179712.nc' 'SHA256' '21c8de2bd8bf495ac87f16d2b53c99c4a7dd2439a9529f1b5289a8f366362b3e'
-'siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_179801-189712.nc' 'https://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/OMIP/MIROC/MIROC6/omip2/r2i1p1f1/SImon/siconc/gn/v20200612/siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_179801-189712.nc' 'SHA256' '7ef462a873301a6cf00de40a1e4983b9c57cb7c4907e23a6185c0dbee88b9ca0'
 'siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_189801-199712.nc' 'https://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/OMIP/MIROC/MIROC6/omip2/r2i1p1f1/SImon/siconc/gn/v20200612/siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_189801-199712.nc' 'SHA256' '945da5fb15c6cca1583c15a2d4983c98b977e62205ba185c675fcb6f83f4bad9'
 'siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_199801-200912.nc' 'https://esgf-data1.llnl.gov/thredds/fileServer/css03_data/CMIP6/OMIP/MIROC/MIROC6/omip2/r2i1p1f1/SImon/siconc/gn/v20200612/siconc_SImon_MIROC6_omip2_r2i1p1f1_gn_199801-200912.nc' 'SHA256' 'a007a2721615aeb8cae82f285c5ca2d65d6947d08df2ce1f70903d3510545562'
 EOF--dataset.file.url.chksum_type.chksum
