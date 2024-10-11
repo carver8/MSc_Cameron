@@ -4,29 +4,23 @@
 import os
 os.chdir('/Users/crcarver/Desktop/AOS_THESIS/MSc_Cameron/Data/')
 import copy
-# import json
 import warnings
-
-# import cf_xarray as cfxr
 import matplotlib.pyplot as plt
-# import shapely
 import xarray as xr
 import xesmf as xe
 from clisops.core.subset import subset_bbox  # For subsetting
-# from xclim.testing import open_dataset  # For opening xclim's test data
 
-cmap = copy.copy(plt.cm.get_cmap("magma"))
+cmap = copy.copy(plt.get_cmap("magma"))
 cmap.set_bad("lightgrey")
 
 # %% Import Reference Data (TARGET)
-access_ref_data = 'MODELS/SICONC/G02202-cdr-ancillary-sh.nc'
+access_ref_data = 'OBSERVATIONS/SICONC/G02202-cdr-ancillary-sh.nc'
 ref_ds = xr.open_dataset(access_ref_data)
 
-ref_ds
-
 # %% Import Model Data (SOURCE)
-access_model_data = 'siconc_SImon_CMCC-CM2-SR5_omip1_r1i1p1f1_gn_163801-200912.nc' #access sea ice dataset
+access_model_data = 'MODELS/SICONC/siconc_SImon_MIROC6_omip2_r1i1p1f1_gn_195301-201812.nc' #access sea ice dataset
 model_ds = xr.open_dataset(access_model_data)
+model_ds.siconc[1,:,:].plot()
 
 # %% INPUT - MODEL
 # Let's look at the grid shape itself and the data for one time step
